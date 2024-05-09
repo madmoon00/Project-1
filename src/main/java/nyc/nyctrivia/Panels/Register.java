@@ -4,6 +4,7 @@
  */
 package nyc.nyctrivia.Panels;
 
+import javax.swing.JOptionPane;
 import nyc.nyctrivia.NYCTrivia;
 
 /**
@@ -17,8 +18,51 @@ public class Register extends javax.swing.JPanel {
      */
     public Register() {
         initComponents();
+        
     }
+    
+    private String areFieldsValid() {
+        boolean check = true;
+        String error = "";
+        String username = txtUsername.getText().trim();
+        String password = new String(txtPassword.getPassword());
+        String rePassword = new String(txtRePassword.getPassword());
+        
+        if (username.equals("")) {
+            error = "Please provide a valid Username.";
+            check = false;
+        }
+        else if (NYCTrivia.doesUsernameExist(username)) {
+            error = "Username already exists.";
+            check = false;
+        }
 
+        if (password.length() <= 4) {
+            error += "\nPassword must contains more than 4 characters.\n";
+            check = false;
+        }
+        else if (!password.equals(rePassword)){
+            error += "\nPasswords don't match";
+            check = false;
+        }
+        
+        if (check) {
+            NYCTrivia.addUser(username, password);
+        }
+        return error;
+    }
+    
+    private void submitRegister() {
+        String checkError = areFieldsValid();
+        
+        if (!checkError.equals("")){
+            JOptionPane.showMessageDialog(null, checkError, "Unsuccesful", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else {
+            NYCTrivia.mFrame.lblLoginClicked();
+            JOptionPane.showMessageDialog(null, "Successful Registration!");
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,6 +80,7 @@ public class Register extends javax.swing.JPanel {
         lblSignIn = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         txtRePassword = new javax.swing.JPasswordField();
+        btnRegister = new javax.swing.JButton();
 
         jLabel1.setText("Username");
 
@@ -62,11 +107,20 @@ public class Register extends javax.swing.JPanel {
 
         jLabel4.setText("Retype Password");
 
+        btnRegister.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnRegister.setText("Register");
+        btnRegister.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnRegisterMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(53, 53, 53)
@@ -80,12 +134,15 @@ public class Register extends javax.swing.JPanel {
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtPassword)
                             .addComponent(txtRePassword)
-                            .addComponent(lblSignIn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(54, Short.MAX_VALUE))
+                            .addComponent(lblSignIn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(130, 130, 130)
+                        .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(54, 54, 54))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -96,13 +153,15 @@ public class Register extends javax.swing.JPanel {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtRePassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
                 .addComponent(lblSignIn)
-                .addGap(22, 22, 22))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(42, 42, 42))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -118,8 +177,13 @@ public class Register extends javax.swing.JPanel {
         lblSignIn.setText("Already have an Account.");
     }//GEN-LAST:event_lblSignInMouseExited
 
+    private void btnRegisterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegisterMouseClicked
+        submitRegister();
+    }//GEN-LAST:event_btnRegisterMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnRegister;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
