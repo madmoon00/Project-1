@@ -24,7 +24,7 @@ public class SQLiteHandler {
         }
     }
     
-    private void createTables() {
+    private void createTables() throws SQLException {
         try {
             String sqlCreateUsers = """
                             CREATE TABLE IF NOT EXISTS users (
@@ -57,7 +57,7 @@ public class SQLiteHandler {
             statement.execute();
 
         } catch (SQLException e) {
-            System.err.println("Error creating table: " + e.getMessage());
+            throw e;
         }
     }
     

@@ -125,7 +125,7 @@ public class Login extends javax.swing.JPanel {
     }//GEN-LAST:event_lblNewAccountMouseMoved
 
     private void lblNewAccountMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblNewAccountMouseClicked
-        NYCTrivia.mFrame.lblNewAccountClicked();
+        NYCTrivia.goRegister();
     }//GEN-LAST:event_lblNewAccountMouseClicked
 
     private void lblNewAccountMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblNewAccountMouseExited

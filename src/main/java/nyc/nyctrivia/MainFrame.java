@@ -17,7 +17,6 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
-        pnlRegister.setVisible(false);
     }
 
     /**
@@ -29,14 +28,9 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pnlLogin = new nyc.nyctrivia.Panels.Login();
-        pnlRegister = new nyc.nyctrivia.Panels.Register();
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
         getContentPane().setLayout(new javax.swing.OverlayLayout(getContentPane()));
-        getContentPane().add(pnlLogin);
-        getContentPane().add(pnlRegister);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -76,17 +70,5 @@ public class MainFrame extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private nyc.nyctrivia.Panels.Login pnlLogin;
-    private nyc.nyctrivia.Panels.Register pnlRegister;
     // End of variables declaration//GEN-END:variables
-
-    public void lblNewAccountClicked(){
-        pnlLogin.setVisible(false);
-        pnlRegister.setVisible(true);
-    }
-    
-    public void lblLoginClicked(){
-        pnlLogin.setVisible(true);
-        pnlRegister.setVisible(false);
-    }
 }

@@ -59,7 +59,7 @@ public class Register extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, checkError, "Unsuccesful", JOptionPane.INFORMATION_MESSAGE);
         }
         else {
-            NYCTrivia.mFrame.lblLoginClicked();
+            NYCTrivia.goLogin();
             JOptionPane.showMessageDialog(null, "Successful Registration!");
         }
     }
@@ -170,7 +170,7 @@ public class Register extends javax.swing.JPanel {
     }//GEN-LAST:event_lblSignInMouseMoved
 
     private void lblSignInMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSignInMouseClicked
-        NYCTrivia.mFrame.lblLoginClicked();
+        NYCTrivia.goLogin();
     }//GEN-LAST:event_lblSignInMouseClicked
 
     private void lblSignInMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSignInMouseExited
