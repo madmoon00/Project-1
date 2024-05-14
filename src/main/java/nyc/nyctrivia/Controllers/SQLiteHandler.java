@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
 
 public class SQLiteHandler {
     private Connection connection;
@@ -20,7 +23,8 @@ public class SQLiteHandler {
             createTables();
 
         } catch (SQLException e) {
-            System.err.println("Error connecting to database: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error connecting to database", "Error", JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
         }
     }
     
@@ -79,7 +83,35 @@ public class SQLiteHandler {
             statement.executeUpdate();
             
         } catch (SQLException e) {
-            System.err.println("Error adding user: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Failed register.", "Error", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+    
+    public void addScore(int userId, int score) {
+        try {
+            // Get the current datetime
+            LocalDateTime currentDateTime = LocalDateTime.now();
+
+            // Format the datetime as a string using a formatter
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formattedDateTime = currentDateTime.format(formatter);
+            
+            // SQL statement to insert a new score
+            String sqlInsertScore = "INSERT INTO scores (userId, date, score) VALUES (?, ?, ?)";
+            
+            // Prepare the statement
+            PreparedStatement statement = connection.prepareStatement(sqlInsertScore);
+            
+            // Set the parameters
+            statement.setInt(1, userId);
+            statement.setString(2, formattedDateTime);
+            statement.setInt(3, score);
+            
+            // Execute the SQL statement to insert the user
+            statement.executeUpdate();
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Failed register.", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
     }
     

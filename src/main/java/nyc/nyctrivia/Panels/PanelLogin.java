@@ -11,12 +11,12 @@ import nyc.nyctrivia.NYCTrivia;
  *
  * @author panvo
  */
-public class Login extends javax.swing.JPanel {
+public class PanelLogin extends javax.swing.JPanel {
 
     /**
      * Creates new form Login
      */
-    public Login() {
+    public PanelLogin() {
         initComponents();
     }
 
@@ -24,7 +24,7 @@ public class Login extends javax.swing.JPanel {
         String username = txtUsername.getText().trim();
         String password = new String(txtPassword.getPassword());
         
-        int userId = NYCTrivia.checkCredentials(username, password);
+        int userId = NYCTrivia.CommitLogin(username, password);
         
         if (userId < 0){
             JOptionPane.showMessageDialog(null, "Invalid Username or Password.", "Error", JOptionPane.INFORMATION_MESSAGE);
@@ -107,12 +107,12 @@ public class Login extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblNewAccount)
                 .addGap(31, 31, 31)
                 .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)

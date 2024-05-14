@@ -11,12 +11,12 @@ import nyc.nyctrivia.NYCTrivia;
  *
  * @author panvo
  */
-public class Register extends javax.swing.JPanel {
+public class PanelRegister extends javax.swing.JPanel {
 
     /**
      * Creates new form Login
      */
-    public Register() {
+    public PanelRegister() {
         initComponents();
         
     }

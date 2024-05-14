@@ -1,25 +1,61 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package nyc.nyctrivia;
 
+import java.text.DecimalFormat;
+import nyc.nyctrivia.Classes.Quiz;
 import nyc.nyctrivia.Controllers.SQLiteHandler;
-import nyc.nyctrivia.Panels.Login;
-import nyc.nyctrivia.Panels.Home;
-import nyc.nyctrivia.Panels.Register;
+import nyc.nyctrivia.Panels.PanelLogin;
+import nyc.nyctrivia.Panels.PanelHome;
+import nyc.nyctrivia.Panels.PanelQuiz;
+import nyc.nyctrivia.Panels.PanelRegister;
+import nyc.nyctrivia.Panels.PanelResults;
 
-/**
- *
- * @author panvo
- */
 public class NYCTrivia {
     private static SQLiteHandler dbHandler;
+    private static Quiz quiz;
+    
+    private static int UserId;
+    public static String Username;
+    
     
     public static void main(String[] args) {
         dbHandler = new SQLiteHandler();
         initComponents();
         goLogin();
+    }
+    
+    private static void initComponents() {
+        pnlHome = new PanelHome();
+        pnlQuiz = new PanelQuiz();
+        pnlResults = new PanelResults();
+        pnlLogin = new PanelLogin();
+        pnlRegister = new PanelRegister();
+        mFrame = new MainFrame();
+        
+        mFrame.getContentPane().add(pnlHome);
+        mFrame.getContentPane().add(pnlQuiz);
+        mFrame.getContentPane().add(pnlResults);
+        mFrame.getContentPane().add(pnlLogin);
+        mFrame.getContentPane().add(pnlRegister);
+        mFrame.pack();
+        mFrame.setVisible(true);
+    }
+    
+    public static void NewGame() {
+        NYCTrivia.quiz = new Quiz(10, "");
+        NYCTrivia.quiz.fetchQuestions();
+        
+        pnlQuiz.setQuiz(NYCTrivia.quiz);
+        goQuiz();
+    }
+    
+    public static void commitAnswer (String userAnswer) {
+        pnlQuiz.commitAnswer(userAnswer);
+    }
+    
+    public static void showResults(int score) {
+        dbHandler.addScore(UserId, score);
+        pnlResults.setScore(score);
+        goResults();
     }
     
     public static boolean doesUsernameExist(String username) {
@@ -32,7 +68,7 @@ public class NYCTrivia {
         dbHandler.addUser(username, password);
     }
     
-    public static int checkCredentials(String username, String password) {
+    public static int CommitLogin(String username, String password) {
         int userId = dbHandler.checkCredentials(username, password);
         
         if (userId >= 0) {
@@ -44,44 +80,57 @@ public class NYCTrivia {
         return userId;
     }
     
-    private static void initComponents() {
-        pnlHome = new Home();
-        pnlLogin = new Login();
-        pnlRegister = new Register();
-        mFrame = new MainFrame();
-        
-        mFrame.getContentPane().add(pnlHome);
-        mFrame.getContentPane().add(pnlLogin);
-        mFrame.getContentPane().add(pnlRegister);
-        mFrame.pack();
-        mFrame.setVisible(true);
+    public static void goHome() {
+        pnlHome.setVisible(true);
+
+        pnlQuiz.setVisible(false);
+        pnlResults.setVisible(false);
+        pnlLogin.setVisible(false);
+        pnlRegister.setVisible(false);
     }
     
-    private static void goHome() {
-        pnlHome.setVisible(true);
+    public static void goQuiz() {
+        pnlQuiz.setVisible(true);
+
+        pnlHome.setVisible(false);
+        pnlResults.setVisible(false);
+        pnlLogin.setVisible(false);
+        pnlRegister.setVisible(false);
+    }
+    
+    public static void goResults() {
+        pnlResults.setVisible(true);
+
+        pnlHome.setVisible(false);
+        pnlQuiz.setVisible(false);
         pnlLogin.setVisible(false);
         pnlRegister.setVisible(false);
     }
     
     public static void goLogin() {
-        pnlHome.setVisible(false);
         pnlLogin.setVisible(true);
+
+        pnlHome.setVisible(false);
+        pnlQuiz.setVisible(false);
+        pnlResults.setVisible(false);
         pnlRegister.setVisible(false);
     }
     
     public static void goRegister() {
-        pnlHome.setVisible(false);
-        pnlLogin.setVisible(false);
         pnlRegister.setVisible(true);
+
+        pnlHome.setVisible(false);
+        pnlQuiz.setVisible(false);
+        pnlResults.setVisible(false);
+        pnlLogin.setVisible(false);
     }
     
     //Declare Components
-    private static Home pnlHome;
-    private static Login pnlLogin;
-    private static Register pnlRegister;
+    private static PanelHome pnlHome;
+    private static PanelQuiz pnlQuiz;    
+    private static PanelResults pnlResults;
+    private static PanelLogin pnlLogin;
+    private static PanelRegister pnlRegister;
     private static MainFrame mFrame;
-    
-    private static int UserId;
-    public static String Username;
 }
 

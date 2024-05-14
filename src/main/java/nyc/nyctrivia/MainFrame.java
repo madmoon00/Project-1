@@ -4,7 +4,7 @@
  */
 package nyc.nyctrivia;
 
-import nyc.nyctrivia.Panels.Login;
+import nyc.nyctrivia.Panels.PanelLogin;
 
 /**
  *
