@@ -23,6 +23,7 @@ public class SQLiteHandler {
             createTables();
 
         } catch (SQLException e) {
+            System.out.println(e.toString());
             ErrorHandler.log(e, "Database Connection Failed.", true, true);
         }
     }
