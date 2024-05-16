@@ -1,51 +1,95 @@
 package nyc.nyctrivia;
 
-import java.text.DecimalFormat;
+import java.awt.Container;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import javax.swing.JPanel;
+import nyc.nyctrivia.Controllers.ErrorHandler;
 import nyc.nyctrivia.Classes.Quiz;
 import nyc.nyctrivia.Controllers.SQLiteHandler;
+import nyc.nyctrivia.Panels.PanelHistory;
 import nyc.nyctrivia.Panels.PanelLogin;
 import nyc.nyctrivia.Panels.PanelHome;
 import nyc.nyctrivia.Panels.PanelQuiz;
 import nyc.nyctrivia.Panels.PanelRegister;
 import nyc.nyctrivia.Panels.PanelResults;
+import nyc.nyctrivia.Panels.PanelStatistics;
 
 public class NYCTrivia {
-    private static SQLiteHandler dbHandler;
-    private static Quiz quiz;
+    
+    
+    //Declare Components
+    private static final ErrorHandler errHandler = new ErrorHandler();
+    private static final SQLiteHandler dbHandler = new SQLiteHandler();
+
+    private static PanelHome pnlHome;
+    private static PanelQuiz pnlQuiz;
+    private static PanelResults pnlResults;
+    private static PanelHistory pnlHistory;
+    private static PanelStatistics pnlStatistics;
+    private static PanelLogin pnlLogin;
+    private static PanelRegister pnlRegister;
+    private static MainFrame mFrame;
+    private static ArrayList<JPanel> Panels;
+    
     
     private static int UserId;
     public static String Username;
-    
+
+    private static Quiz quiz;
     
     public static void main(String[] args) {
-        dbHandler = new SQLiteHandler();
-        initComponents();
+        try {
+            initComponents();
+        } catch (Exception e) {
+            ErrorHandler.log(e, "Failed Initilizing Components.", true, true);
+        }
+        
         goLogin();
+
     }
     
     private static void initComponents() {
         pnlHome = new PanelHome();
         pnlQuiz = new PanelQuiz();
         pnlResults = new PanelResults();
+        pnlHistory = new PanelHistory();
+        pnlStatistics = new PanelStatistics();
         pnlLogin = new PanelLogin();
         pnlRegister = new PanelRegister();
         mFrame = new MainFrame();
         
-        mFrame.getContentPane().add(pnlHome);
-        mFrame.getContentPane().add(pnlQuiz);
-        mFrame.getContentPane().add(pnlResults);
-        mFrame.getContentPane().add(pnlLogin);
-        mFrame.getContentPane().add(pnlRegister);
+        Panels = new ArrayList<>();
+        Panels.add(pnlHome);
+        Panels.add(pnlQuiz);
+        Panels.add(pnlResults);
+        Panels.add(pnlHistory);
+        Panels.add(pnlStatistics);
+        Panels.add(pnlLogin);
+        Panels.add(pnlRegister);
+        
+        for (JPanel panel : Panels) {
+            // Add each panel to the parent container
+            mFrame.add(panel);
+        }
+        
         mFrame.pack();
+        mFrame.setLocationRelativeTo(null);
         mFrame.setVisible(true);
     }
     
     public static void NewGame() {
-        NYCTrivia.quiz = new Quiz(10, "");
-        NYCTrivia.quiz.fetchQuestions();
-        
-        pnlQuiz.setQuiz(NYCTrivia.quiz);
-        goQuiz();
+        try {
+            NYCTrivia.quiz = new Quiz(10, "");
+            NYCTrivia.quiz.fetchQuestions();
+
+            pnlQuiz.setQuiz(NYCTrivia.quiz);
+            goQuiz();
+        }
+        catch (Exception e) {
+            ///////////////////////////////////////////////// mono mhnuma
+            goHome();
+        }
     }
     
     public static void commitAnswer (String userAnswer) {
@@ -80,57 +124,58 @@ public class NYCTrivia {
         return userId;
     }
     
+    private static void navigate(JPanel selectedPanel){
+        try {
+            for (JPanel panel : Panels) {
+                if (selectedPanel == panel) panel.setVisible(true);
+                else panel.setVisible(false);
+            }
+        }
+        catch (Exception e) {
+            ErrorHandler.log(e, "Failed on navigate(JPanel selectedPanel). Press Ok to Exit.", true, true);
+        }
+        
+    }
+    
     public static void goHome() {
-        pnlHome.setVisible(true);
-
-        pnlQuiz.setVisible(false);
-        pnlResults.setVisible(false);
-        pnlLogin.setVisible(false);
-        pnlRegister.setVisible(false);
+        navigate(pnlHome);
     }
     
     public static void goQuiz() {
-        pnlQuiz.setVisible(true);
-
-        pnlHome.setVisible(false);
-        pnlResults.setVisible(false);
-        pnlLogin.setVisible(false);
-        pnlRegister.setVisible(false);
+        navigate(pnlQuiz);
     }
     
     public static void goResults() {
-        pnlResults.setVisible(true);
-
-        pnlHome.setVisible(false);
-        pnlQuiz.setVisible(false);
-        pnlLogin.setVisible(false);
-        pnlRegister.setVisible(false);
+        navigate(pnlResults);
+    }
+    
+    public static void goHistory() {
+        ResultSet history = dbHandler.retrieveHistory(UserId);
+        
+        if (history == null){
+            return;
+        }
+        pnlHistory.setHistory(history);
+        navigate(pnlHistory);
+    }
+    
+    public static void goStatistics() {
+        ResultSet bestPlayers = dbHandler.retrieveTopPlayers();
+        ResultSet mostActivePlayers = dbHandler.retrieveMostActivePlayers();
+        
+        if (bestPlayers == null || mostActivePlayers == null){
+            return;
+        }
+        pnlStatistics.setTables(bestPlayers, mostActivePlayers);
+        navigate(pnlStatistics);
     }
     
     public static void goLogin() {
-        pnlLogin.setVisible(true);
-
-        pnlHome.setVisible(false);
-        pnlQuiz.setVisible(false);
-        pnlResults.setVisible(false);
-        pnlRegister.setVisible(false);
+        navigate(pnlLogin);
     }
     
     public static void goRegister() {
-        pnlRegister.setVisible(true);
-
-        pnlHome.setVisible(false);
-        pnlQuiz.setVisible(false);
-        pnlResults.setVisible(false);
-        pnlLogin.setVisible(false);
+        navigate(pnlRegister);
     }
-    
-    //Declare Components
-    private static PanelHome pnlHome;
-    private static PanelQuiz pnlQuiz;    
-    private static PanelResults pnlResults;
-    private static PanelLogin pnlLogin;
-    private static PanelRegister pnlRegister;
-    private static MainFrame mFrame;
 }
 

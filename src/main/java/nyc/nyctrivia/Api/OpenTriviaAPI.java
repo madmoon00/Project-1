@@ -9,7 +9,7 @@ import java.net.URL;
 public class OpenTriviaAPI {
     private static final String BASE_URL = "https://opentdb.com/api.php?";
     private static final String TOKEN_URL = "https://opentdb.com/api_token.php";
-    
+    private static int counter = 0;
     private int amount;
     private String token;
     private String category;
@@ -18,10 +18,10 @@ public class OpenTriviaAPI {
     public OpenTriviaAPI(int amount, String category) {
         this.amount = amount;
         this.category = category;
-        this.token = retrieveToken();
+        retrieveAndSetNewToken();
     }
     
-    private String retrieveToken() {
+    public void retrieveAndSetNewToken() {
         try {
             URL url = new URL(TOKEN_URL + "?command=request");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -36,14 +36,13 @@ public class OpenTriviaAPI {
             reader.close();
 
             // Extract token from JSON response
-            // Assuming the response format is {"response_code":0,"response_message":"Token Generated Successfully!","token":"YOURTOKENHERE"}
             String jsonResponse = response.toString();
             int startIndex = jsonResponse.indexOf("\"token\":\"") + 9;
             int endIndex = jsonResponse.indexOf("\"", startIndex);
-            return jsonResponse.substring(startIndex, endIndex);
+            token = jsonResponse.substring(startIndex, endIndex);
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            
         }
     }
     
@@ -74,24 +73,37 @@ public class OpenTriviaAPI {
         return url;
     }
     
-    public String getTriviaQuestions() {
+    public String getTriviaQuestions() throws InterruptedException {
         try {
             URL url = new URL(buildUrlWithToken());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+                return response.toString();
+            } else {
+                return "{\"return_code\" : 5 " + "}";
             }
-            reader.close();
-
-            return response.toString();
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            ////////////////////
+            counter++;
+            if (counter < 2) {
+                Thread.sleep(5000);
+                return getTriviaQuestions();
+            }
+            else {
+                ///////////////
+                return null;
+            }
         }
     }
+
 }

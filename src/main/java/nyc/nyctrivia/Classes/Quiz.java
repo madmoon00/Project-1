@@ -4,6 +4,8 @@ import nyc.nyctrivia.Api.OpenTriviaAPI;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class Quiz {
     private OpenTriviaAPI otAPI;
@@ -24,10 +26,10 @@ public class Quiz {
         return this.questions;
     }
     
-    public void fetchQuestions(){
+    public void fetchQuestions() throws InterruptedException{
         Question[] questions = null;
         
-        String jsonResponse = this.otAPI.getTriviaQuestions();
+        String jsonResponse = otAPI.getTriviaQuestions();
         
         if (jsonResponse != null){
             // Parse JSON response
@@ -55,34 +57,34 @@ public class Quiz {
                             choices[j + 1] = choicesArray.get(j).getAsString();
                         }
                         
+                        Collections.shuffle(Arrays.asList(choices));
+                        
                         // Create a new Question object and add it to the array
                         questions[i] = new Question(question, correctAnswer, choices);
                     }
                     break;
                 case 1,2:
-                    throw new Error("Internal Error! Try again.");
+                    throw new Error("API error! Try again.");
                 case 3:
-                    // Token Not Found: Session Token does not exist
-                    System.out.println("Token Not Found: Session Token does not exist.");
-                    break;
+                    otAPI.retrieveAndSetNewToken();
+                    Thread.sleep(5000);
+                    fetchQuestions();
+                    return;
                 case 4:
+                    otAPI.resetToken();
+                    Thread.sleep(5000);
+                    fetchQuestions();
+                    return;
                     // Token Empty: Session Token has returned all possible questions for the specified query
-                    System.out.println("Token Empty: Session Token has returned all possible questions for the specified query. Resetting the Token is necessary.");
-                    break;
-                case 5:
-                    // Rate Limit: Too many requests have occurred
-                    System.out.println("Rate Limit: Too many requests have occurred. Each IP can only access the API once every 5 seconds.");
-                    break;
+                    //System.out.println("Token Empty: Session Token has returned all possible questions for the specified query. Resetting the Token is necessary.");
+                    //break;
                 default:
-                    // Handle other response codes if necessary
                     System.out.println("Unknown response code: " + responseCode);
                     break;
             }
             
             JsonArray resultsArray = jsonObject.getAsJsonArray("results");
-
         }
-        
         this.questions = questions;
     }
 }

@@ -23,8 +23,7 @@ public class SQLiteHandler {
             createTables();
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error connecting to database", "Error", JOptionPane.INFORMATION_MESSAGE);
-            System.exit(0);
+            ErrorHandler.log(e, "Database Connection Failed.", true, true);
         }
     }
     
@@ -87,30 +86,93 @@ public class SQLiteHandler {
         }
     }
     
+    public ResultSet retrieveHistory(int userId) {
+        try {
+            // SQL query to retrieve the top players based on average score
+            String sql = "SELECT date, score FROM scores WHERE userId = ? ORDER BY date DESC";
+            
+            // Prepare the statement
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, userId);
+            // Execute the query
+            ResultSet resultSet = statement.executeQuery();
+            
+            return resultSet;
+        } catch (SQLException e) {
+            System.out.println(e);
+            JOptionPane.showMessageDialog(null, "Failed to retrieve top players.", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }        
+    }
+    
+    public ResultSet retrieveTopPlayers() {
+        try {
+            // SQL query to retrieve the top players based on average score
+            String sql = "SELECT u.username as username, s.userId, ROUND(AVG(s.score), 2) AS averageScore " +
+                        "FROM scores s " +
+                        "JOIN users u ON s.userId = u.id " +
+                        "GROUP BY s.userId, u.username " +
+                        "ORDER BY averageScore DESC ";
+            
+            // Prepare the statement
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            // Execute the query
+            ResultSet resultSet = statement.executeQuery();
+            
+            return resultSet;
+        } catch (SQLException e) {
+            System.out.println(e);
+            JOptionPane.showMessageDialog(null, "Failed to retrieve top players.", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }        
+    }
+    
+    public ResultSet retrieveMostActivePlayers() {
+        try {
+            // SQL query to retrieve the top players based on average score
+            String sql = "SELECT u.username as username, s.userId, COUNT(*) AS gamesPlayed " +
+                        "FROM scores s " +
+                        "JOIN users u ON s.userId = u.id " +
+                        "GROUP BY s.userId, u.username " +
+                        "ORDER BY gamesPlayed DESC ";
+            
+            // Prepare the statement
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            // Execute the query
+            ResultSet resultSet = statement.executeQuery();
+            
+            return resultSet;
+        } catch (SQLException e) {
+            System.out.println(e);
+            JOptionPane.showMessageDialog(null, "Failed to most active players.", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }        
+    }
+    
     public void addScore(int userId, int score) {
         try {
             // Get the current datetime
             LocalDateTime currentDateTime = LocalDateTime.now();
 
             // Format the datetime as a string using a formatter
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String formattedDateTime = currentDateTime.format(formatter);
-            
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");            
             // SQL statement to insert a new score
-            String sqlInsertScore = "INSERT INTO scores (userId, date, score) VALUES (?, ?, ?)";
+            String sqlInsertScore = "INSERT INTO scores (userId, date, score) VALUES (?, CURRENT_TIMESTAMP, ?)";
             
             // Prepare the statement
             PreparedStatement statement = connection.prepareStatement(sqlInsertScore);
             
             // Set the parameters
             statement.setInt(1, userId);
-            statement.setString(2, formattedDateTime);
-            statement.setInt(3, score);
+            statement.setInt(2, score);
             
             // Execute the SQL statement to insert the user
             statement.executeUpdate();
             
         } catch (SQLException e) {
+            System.out.println(e);
             JOptionPane.showMessageDialog(null, "Failed register.", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
     }

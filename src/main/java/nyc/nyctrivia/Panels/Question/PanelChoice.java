@@ -29,6 +29,7 @@ public class PanelChoice extends javax.swing.JPanel {
         lblChoice = new javax.swing.JLabel();
 
         lblChoice.setFont(new java.awt.Font("Dialog", 3, 16)); // NOI18N
+        lblChoice.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblChoice.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblChoiceMouseClicked(evt);

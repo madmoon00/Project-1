@@ -46,6 +46,8 @@ public class PanelLogin extends javax.swing.JPanel {
         lblNewAccount = new javax.swing.JLabel();
         btnLogin = new javax.swing.JButton();
 
+        txtUsername.setText("nikos");
+
         jLabel1.setText("Username");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Emoji", 0, 18)); // NOI18N
@@ -53,6 +55,8 @@ public class PanelLogin extends javax.swing.JPanel {
         jLabel2.setText("LOGIN");
 
         jLabel3.setText("Password");
+
+        txtPassword.setText("123456");
 
         lblNewAccount.setText("Create Account.");
         lblNewAccount.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
