@@ -1,10 +1,17 @@
 package nyc.nyctrivia.Api;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import nyc.nyctrivia.Classes.Category;
 
 public class OpenTriviaAPI {
     private static final String BASE_URL = "https://opentdb.com/api.php?";
@@ -104,6 +111,46 @@ public class OpenTriviaAPI {
                 return null;
             }
         }
+    }
+    
+    public static List<Category> getCategories() throws IOException {
+        List<Category> categories = new ArrayList<>();
+
+        // URL for getting trivia categories
+        String apiUrl = "https://opentdb.com/api_category.php";
+
+        // Open connection
+        URL url = new URL(apiUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+
+        // Check if response code is OK
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            // Read response
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            reader.close();
+
+            // Parse JSON response
+            Gson gson = new Gson();
+            JsonObject jsonObject = gson.fromJson(response.toString(), JsonObject.class);
+            JsonArray categoriesArray = jsonObject.getAsJsonArray("trivia_categories");
+
+            // Extract category IDs and names
+            for (JsonElement element : categoriesArray) {
+                JsonObject categoryObject = element.getAsJsonObject();
+                int id = categoryObject.get("id").getAsInt();
+                String name = categoryObject.get("name").getAsString();
+                categories.add(new Category(id, name));
+            }
+        }
+
+        return categories;
     }
 
 }

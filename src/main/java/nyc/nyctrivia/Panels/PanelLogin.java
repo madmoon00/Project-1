@@ -46,7 +46,11 @@ public class PanelLogin extends javax.swing.JPanel {
         lblNewAccount = new javax.swing.JLabel();
         btnLogin = new javax.swing.JButton();
 
-        txtUsername.setText("nikos");
+        txtUsername.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUsernameActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Username");
 
@@ -55,8 +59,6 @@ public class PanelLogin extends javax.swing.JPanel {
         jLabel2.setText("LOGIN");
 
         jLabel3.setText("Password");
-
-        txtPassword.setText("123456");
 
         lblNewAccount.setText("Create Account.");
         lblNewAccount.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -139,6 +141,10 @@ public class PanelLogin extends javax.swing.JPanel {
     private void btnLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoginMouseClicked
         submitLogin();
     }//GEN-LAST:event_btnLoginMouseClicked
+
+    private void txtUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsernameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUsernameActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

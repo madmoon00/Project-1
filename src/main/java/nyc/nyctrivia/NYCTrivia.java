@@ -3,10 +3,13 @@ package nyc.nyctrivia;
 import java.awt.Container;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
+import nyc.nyctrivia.Classes.Category;
 import nyc.nyctrivia.Controllers.ErrorHandler;
 import nyc.nyctrivia.Classes.Quiz;
 import nyc.nyctrivia.Controllers.SQLiteHandler;
+import nyc.nyctrivia.Panels.PanelCategory;
 import nyc.nyctrivia.Panels.PanelHistory;
 import nyc.nyctrivia.Panels.PanelLogin;
 import nyc.nyctrivia.Panels.PanelHome;
@@ -23,6 +26,7 @@ public class NYCTrivia {
     private static final SQLiteHandler dbHandler = new SQLiteHandler();
 
     private static PanelHome pnlHome;
+    private static PanelCategory pnlCategory;
     private static PanelQuiz pnlQuiz;
     private static PanelResults pnlResults;
     private static PanelHistory pnlHistory;
@@ -51,6 +55,7 @@ public class NYCTrivia {
     
     private static void initComponents() {
         pnlHome = new PanelHome();
+        pnlCategory = new PanelCategory();
         pnlQuiz = new PanelQuiz();
         pnlResults = new PanelResults();
         pnlHistory = new PanelHistory();
@@ -61,6 +66,7 @@ public class NYCTrivia {
         
         Panels = new ArrayList<>();
         Panels.add(pnlHome);
+        Panels.add(pnlCategory);
         Panels.add(pnlQuiz);
         Panels.add(pnlResults);
         Panels.add(pnlHistory);
@@ -78,9 +84,15 @@ public class NYCTrivia {
         mFrame.setVisible(true);
     }
     
-    public static void NewGame() {
+    public static void NewGame(int categoryId) {
+        String category = "";
+        
+        if (categoryId > -1){
+            category += "" + categoryId;
+        }
+        
         try {
-            NYCTrivia.quiz = new Quiz(10, "");
+            NYCTrivia.quiz = new Quiz(10, category);
             NYCTrivia.quiz.fetchQuestions();
 
             pnlQuiz.setQuiz(NYCTrivia.quiz);
@@ -91,6 +103,7 @@ public class NYCTrivia {
             goHome();
         }
     }
+    
     
     public static void commitAnswer (String userAnswer) {
         pnlQuiz.commitAnswer(userAnswer);
@@ -139,6 +152,11 @@ public class NYCTrivia {
     
     public static void goHome() {
         navigate(pnlHome);
+    }
+    
+    public static void goCategory() {
+        pnlCategory.getCategories();
+        navigate(pnlCategory);
     }
     
     public static void goQuiz() {
