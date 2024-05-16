@@ -1,4 +1,0 @@
-Thu May 16 00:49:41 EEST 2024 || java.sql.SQLException: No suitable driver found for jdbqqqc:sqlite:trivia.db || Database Connection Failed.
-Thu May 16 01:39:26 EEST 2024 || java.lang.IllegalArgumentException || Failed Initilizing Components.
-Thu May 16 01:40:39 EEST 2024 || java.lang.NullPointerException: Cannot invoke "java.awt.Container.getWidth()" because "parentContainer" is null || Failed Initilizing Components.
-Thu May 16 01:45:34 EEST 2024 || java.lang.IllegalArgumentException || Failed Initilizing Components.
