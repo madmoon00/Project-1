@@ -15,13 +15,13 @@ To get started with this project, follow these steps:
 1. Clone this repository to your local machine:
 
     ```sh
-    git clone https://github.com/your-username/project-name.git
+    git clone https://github.com/madmoon00/Project-1.git
     ```
 
 2. Navigate to the project directory:
 
     ```sh
-    cd project-name
+    cd Project-1
     ```
 
 3. Set up the `JAVA_HOME` environment variable to point to your JDK installation directory. For example:
@@ -49,4 +49,4 @@ To run the application, navigate to the `target` directory and execute the JAR f
 
 ```sh
 cd target
-java -jar your-application.jar
+java -jar NYCTrivia-1.0-SNAPSHOT.jar
